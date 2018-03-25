@@ -1,11 +1,30 @@
 <!DOCTYPE html>
 <html lang="pl">
   <head>
+    <link rel="stylesheet" type="text/css" href="stle.css">
+    <style>
+    div {
+      padding-bottom: 10px;
+    }
+    canvas {
+      border-width: 1px;
+      border-color: #F00;
+      border-style: solid;
+    }
+    </style>
     <meta charset="utf-8">
     <title>Game of Life</title>
-    <canvas id="gameCan" width="1024" height="632" style="border: 1px solid #000000;" />
-    <script src="gameCode.js"></script>
   </head>
   <body>
+    <!-- <div>
+      Refresh: <input type="text" id="ref" size="5">
+      Width: <input type="text" id="wid" size="5">
+      Height: <input type="text" id="hei" size="5">
+      Chance: <input type="text" id="up" size="2">/<input type="text" id="low" size="2">
+      <button type="button" name="button" onclick="start()">GO</button>
+    </div> -->
+
+    <canvas id="gameCan" width="1024" height="632" />
+    <script src="gameCode.js"></script>
   </body>
 </html>

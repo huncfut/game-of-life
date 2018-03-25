@@ -1,37 +1,40 @@
-var canvas = document.getElementById("gameCan")
-var ctx = canvas.getContext("2d")
-var gameImageData = ctx.createImageData(1024, 632)
-var gameBoard = []
+// Setting up some basic vars
+refreshRate = 1000
+genChance = [4, 1]
+height = 632
+width = 1024
+canvas = document.getElementById("gameCan")
+ctx = canvas.getContext("2d")
+gameImageData = ctx.createImageData(width, height)
+gameBoard = []
 
-for(i = 0; i < gameImageData.data.length / 4; i++) {
-  if(Math.floor(Math.random() * 4) < 1) {
-    gameBoard.push(1)
-  } else {
-    gameBoard.push(0)
+
+function generateRandomBoard() {
+  for(i = 0; i < gameImageData.data.length / 4; i++) {
+    if(Math.floor(Math.random() * genChance[0]) < genChance[1]) {
+      gameBoard.push(1)
+    } else {
+      gameBoard.push(0)
+    }
   }
-}
-for(i = 0; i < gameImageData.data.length / 4; i++) {
-  gameImageData.data[(i * 4) + 3] = 255 * gameBoard[i]
 }
 
 function check(board, index) {
   x = 0
-  if(index > 1024) {x += board[index - 1025]}
-  if(index > 1023) {x += board[index - 1024]}
-  if(index > 1022) {x += board[index - 1023]}
-  if(index > 0) {x += board[index - 1]}
-  if(index < 647168) {x += board[index + 1]}
-  if(index < 646145) {x += board[index + 1023]}
-  if(index < 646144) {x += board[index + 1024]}
-  if(index < 646143) {x += board[index + 1025]}
+  if(index > width)                       {x += board[index - (width + 1)]}
+  if(index > width - 1)                   {x += board[index - width]}
+  if(index > width - 2)                   {x += board[index - (width - 1)]}
+  if(index > 0)                           {x += board[index - 1]}
+  if(index < width * height)              {x += board[index + 1]}
+  if(index < width * height - width + 1)  {x += board[index + width - 1]}
+  if(index < width * height - width)      {x += board[index + width]}
+  if(index < width * height - width - 1)  {x += board[index + width + 1]}
   return x
 }
 
 function newGeneration(imgData, board) {
-  var newBoard = []
-
-  for(i = 0, i < board.length, i++) {
-  // for(pixel in board) {
+  newBoard = []
+  for(i = 0; i < board.length; i++) {
     if(board[i]) {
       if(check(board, i) > 3 || check(board, i) < 2) {
         newBoard.push(0)
@@ -46,14 +49,13 @@ function newGeneration(imgData, board) {
       }
     }
   }
-
   for(i = 0; i < imgData.data.length / 4; i++) {
     imgData.data[(i * 4) + 3] = 255 * board[i]
   }
-
   ctx.putImageData(imgData, 0, 0)
-
-  setTimeout(newGeneration(gameImageData, newBoard), 1000)
+  setTimeout(newGeneration, refreshRate, imgData, newBoard)
 }
-console.log(check(gameBoard, 647168))
+
+generateRandomBoard()
+
 newGeneration(gameImageData, gameBoard)
